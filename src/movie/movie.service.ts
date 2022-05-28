@@ -7,6 +7,8 @@ import {TransactionRoleEnum} from "../enums/transactionRoleEnum";
 import {OmdbService} from "../omdb/omdb.service";
 import {UserLogEntity} from "../userLog/userLog.entity";
 import {UserDto} from "../user/user.dto";
+import {OmdbMovieDto} from "../omdb/dto/omdb-movie.dto";
+import {lastValueFrom, map} from "rxjs";
 
 @Injectable()
 export class MovieService {
@@ -28,20 +30,20 @@ export class MovieService {
                 Genre: "Drama, Sci-Fi",
                 Director: "nose"};*/
 
-            const movieFound = await this.omdbService.getMovie(movieCreateRequestDto.title);
-            const movie = this.movieRepository.create(Movie.of(movieCreateRequestDto));
-            movie.genre = movieFound.Genre;
-            movie.released = movieFound.Released;
-            movie.director = movieFound.Director;
+            const omdbMovieData = await this.omdbService.getMovie(movieCreateRequestDto.title);
 
-            const moviePersisted =  await this.movieRepository.save(movie);
+            const movie = this.movieRepository.create(Movie.of(movieCreateRequestDto));
+            movie.genre = omdbMovieData.Genre;
+            movie.released = omdbMovieData.Released;
+            movie.director = omdbMovieData.Director;
+            await this.movieRepository.save(movie);
 
             const userLogEntity = new UserLogEntity();
             userLogEntity.movie = movie;
             userLogEntity.userId = userDto.userId;
             await this.userLogsService.createUserLog(userLogEntity);
 
-            return moviePersisted;
+            return movie;
 
         }catch (e){
             throw new HttpException(e,
@@ -50,7 +52,12 @@ export class MovieService {
     }
 
     async findAll(): Promise<Movie[]> {
-        return this.movieRepository.find();
+        try {
+            return await this.movieRepository.find();
+        }catch (e){
+            throw new HttpException(e,
+                HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
 }

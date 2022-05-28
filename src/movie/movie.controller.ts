@@ -9,7 +9,7 @@ import {
     Query,
     Res,
     UseGuards,
-    HttpException
+    HttpException, HttpCode
 } from "@nestjs/common";
 import {ApiBearerAuth, ApiOkResponse, ApiOperation, ApiTags} from "@nestjs/swagger";
 import {MovieCreateRequestDto} from "./dto/movie-create-request.dto";
@@ -26,6 +26,7 @@ export class MovieController {
     constructor(private movieService: MovieService) {}
 
     @Post()
+    @HttpCode(HttpStatus.CREATED)
     @ApiOperation({ summary: 'Create movie' })
     @ApiOkResponse({ description: 'Create movie' })
     @ApiBearerAuth()
@@ -37,12 +38,11 @@ export class MovieController {
     ) {
         try {
             const userDto : UserDto = req.user;
-            console.log(userDto);
-            const movie = await this.movieService.createMovie(movieCreateRequestDto, userDto);
-            return res.status(HttpStatus.OK).json({
+            return await this.movieService.createMovie(movieCreateRequestDto, userDto);
+            /*return res.status(HttpStatus.OK).json({
                 message: 'Movie has been created successfully',
                 movie,
-            });
+            });*/
         } catch (err) {
             console.log(err);
             throw new HttpException({
@@ -53,12 +53,22 @@ export class MovieController {
     }
 
     @Get()
+    @HttpCode(HttpStatus.OK)
     @ApiOperation({ summary: 'Get all movies' })
     @ApiOkResponse({ description: 'Get all movies', type: [Movie] })
-    async findAll(@Res() res) {
-        const movies = await this.movieService.findAll();
+    public async findAll() {
+        try{
+            return await this.movieService.findAll();
+        }catch (err){
+            console.log(err);
+            throw new HttpException({
+                status: HttpStatus.BAD_REQUEST,
+                error: err.message,
+            }, HttpStatus.BAD_REQUEST);
+        }
 
-        return res.status(HttpStatus.OK).json(movies);
+
+        // return res.status(HttpStatus.OK).json(movies);
     }
 
 }
