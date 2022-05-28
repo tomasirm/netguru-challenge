@@ -1,5 +1,6 @@
 import {HttpModule, Module} from "@nestjs/common";
 import {OmdbService} from "./omdb.service";
+import {ConfigService} from "../config";
 
 @Module({
     imports: [

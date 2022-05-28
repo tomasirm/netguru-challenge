@@ -8,15 +8,15 @@ export class TypeOrmConfigService implements TypeOrmOptionsFactory {
 
   createTypeOrmOptions(): TypeOrmModuleOptions {
     return {
-      type: this.configService.get('DB_TYPE') as any,
-      host: this.configService.get('DB_HOST'),
-      port: parseInt(this.configService.get('DB_PORT')) || 3306,
-      username: this.configService.get('DB_USERNAME'),
-      password: this.configService.get('DB_PASSWORD'),
-      database: this.configService.get('DB_NAME'),
+      type: process.env.DB_TYPE as any,
+      host: process.env.DB_HOST,
+      port: parseInt(process.env.DB_PORT) || 3306,
+      username: process.env.DB_USERNAME,
+      password: process.env.DB_PASSWORD,
+      database: process.env.DB_NAME,
       entities: [__dirname + '/../**/*.entity{.ts,.js}'],
-      synchronize: this.configService.isEnv('development'),
-      logging: this.configService.isEnv('development'),
+      synchronize: true,
+      logging: true,
     };
   }
 }

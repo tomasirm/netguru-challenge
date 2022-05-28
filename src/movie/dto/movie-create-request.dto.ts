@@ -6,7 +6,7 @@ export class MovieCreateRequestDto{
     @IsNotEmpty({ message: 'title bust be not empty' })
     @IsString({ message: 'title must be string' })
     @Length(1, 50)
-    @ApiProperty({ description: 'title' })
+    @ApiProperty({ description: 'Title of the movie' })
     title: string;
 
     /*@IsNotEmpty({ message: 'director bust be not empty' })

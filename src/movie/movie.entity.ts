@@ -1,7 +1,9 @@
-import {Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn} from 'typeorm';
+import {Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, Unique, UpdateDateColumn} from 'typeorm';
 import {ApiProperty} from '@nestjs/swagger';
+import {UserLogEntity} from "../userLog/userLog.entity";
 
 @Entity()
+@Unique(["title", "director"])
 export class Movie {
 
     @PrimaryGeneratedColumn()
@@ -24,13 +26,16 @@ export class Movie {
     @ApiProperty({description: 'released'})
     released: Date;
 
-    @CreateDateColumn()
+    @CreateDateColumn({name: 'created_at'})
     @ApiProperty({description: 'createdAt'})
     createdAt;
 
-    @UpdateDateColumn()
+    @UpdateDateColumn({name: 'updated_at'})
     @ApiProperty({description: 'updatedAt'})
     updatedAt;
+
+    @OneToMany(() => UserLogEntity, (userLog) => userLog.movie)
+    userLogs: UserLogEntity[]
 
     static of(params: Partial<Movie>): Movie {
         const movie = new Movie();

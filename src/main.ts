@@ -7,6 +7,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.enableCors();
   setupSwagger(app);
+  console.log('OMDB_API_KEY::'+process.env.OMDB_API_KEY);
   await app.listen(3000);
 }
 bootstrap();
