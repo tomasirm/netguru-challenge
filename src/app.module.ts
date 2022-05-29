@@ -3,11 +3,11 @@ import {MovieModule} from "./movie/movie.module";
 import {DatabaseModule} from "./database/database.module";
 import {ConfigModule} from "@nestjs/config";
 import {PassportModule} from "@nestjs/passport";
-import {UserLogModule} from "./userLog/userLog.module";
+import {UserTransactionLogModule} from "./user-transaction-log/user-transaction-log.module";
 
 
 @Module({
   imports: [  ConfigModule.forRoot(),
-    PassportModule,MovieModule, DatabaseModule, UserLogModule],
+    PassportModule,MovieModule, DatabaseModule, UserTransactionLogModule],
 })
 export class AppModule {}

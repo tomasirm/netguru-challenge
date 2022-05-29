@@ -5,13 +5,13 @@ import {MovieService} from "./movie.service";
 import {TypeOrmModule} from "@nestjs/typeorm";
 import {JwtAuthGuard} from "../auth/jwt-auth.guard";
 import {JwtStrategy} from "../auth/jwt.strategy";
-import {UserLogsService} from "../userLog/userLogs.service";
-import {UserLogsRepository} from "../userLog/userLogs.repository";
+import {UserTransactionLogService} from "../user-transaction-log/user-transaction-log.service";
+import {UserTransactionLogRepository} from "../user-transaction-log/user-transaction-log.repository";
 
 @Module({
     imports: [TypeOrmModule.forFeature([MovieRepository]),
-        TypeOrmModule.forFeature([UserLogsRepository]), HttpModule],
+        TypeOrmModule.forFeature([UserTransactionLogRepository]), HttpModule],
     controllers: [MovieController],
-    providers: [MovieService, JwtAuthGuard, JwtStrategy, UserLogsService],
+    providers: [MovieService, JwtAuthGuard, JwtStrategy, UserTransactionLogService],
 })
 export class MovieModule {}

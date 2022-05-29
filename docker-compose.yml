@@ -10,7 +10,7 @@ services:
       - ./pgdata:/var/lib/postgresql/data
     ports:
       - "5433:5432"
-  web:
+  movie-api:
     build: .
     depends_on:
       - db
@@ -19,7 +19,7 @@ services:
     environment:
       JWT_SECRET: ${JWT_SECRET}
       OMDB_API_KEY: ${OMDB_API_KEY}
-  auth:
+  auth-api:
     build: ./nodejs-recruitment-task/.
     environment:
       JWT_SECRET: ${JWT_SECRET}

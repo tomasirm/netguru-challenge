@@ -9,50 +9,43 @@ import {
     UpdateDateColumn
 } from 'typeorm';
 import {ApiProperty} from '@nestjs/swagger';
-import {UserLogEntity} from "../userLog/userLog.entity";
+import {UserTransactionLogEntity} from "../user-transaction-log/user-transaction-log.entity";
 
-@Entity()
+@Entity('movie')
 @Unique(["title", "director"])
-export class Movie {
+export class MovieEntity {
 
     @PrimaryGeneratedColumn()
-    @ApiProperty({description: 'id'})
+    @ApiProperty({description: 'Primary Key'})
     id: number;
 
-    @Column({length: 50})
-    @ApiProperty({description: 'title'})
+    @Column({length: 50, nullable: false})
+    @ApiProperty({description: 'Title (Unique Key)'})
     title: string;
 
-    @Column({length: 50})
-    @ApiProperty({description: 'director'})
+    @Column({length: 50, nullable: false})
+    @ApiProperty({description: 'Director (Unique Key)'})
     director: string;
 
-    @Column({length: 50})
-    @ApiProperty({description: 'genre'})
+    @Column({length: 50, nullable: false})
+    @ApiProperty({description: 'Genre'})
     genre: string;
 
-    @Column({type: 'date'})
-    @ApiProperty({description: 'released'})
+    @Column({type: 'date', nullable: false})
+    @ApiProperty({description: 'Released date'})
     released: Date;
 
-    @CreateDateColumn({name: 'created_at'})
-    @ApiProperty({description: 'createdAt'})
-    createdAt;
-
-    @UpdateDateColumn({name: 'updated_at'})
-    @ApiProperty({description: 'updatedAt'})
-    updatedAt;
-
-    @OneToMany(() => UserLogEntity, (userLog) => userLog.movie)
-    userLogs: UserLogEntity[]
+    @OneToMany(() => UserTransactionLogEntity, (userLog) => userLog.movie)
+    @ApiProperty()
+    userLogs: UserTransactionLogEntity[]
 
     @BeforeInsert()
     nameToUpperCase() {
         this.title = this.title.toUpperCase();
     }
 
-    static of(params: Partial<Movie>): Movie {
-        const movie = new Movie();
+    static of(params: Partial<MovieEntity>): MovieEntity {
+        const movie = new MovieEntity();
         Object.assign(movie, params);
 
         return movie;

@@ -52,4 +52,6 @@ export class OmdbMovieDto {
     Response: string;
     @ApiProperty({ description: 'Ratings' })
     Ratings: OmdbRatingMovieDto[];
+    @ApiProperty({ description: 'Error' })
+    Error: string;
 }

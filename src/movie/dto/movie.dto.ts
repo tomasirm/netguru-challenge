@@ -1,5 +1,4 @@
 import {ApiProperty} from "@nestjs/swagger";
-import {IsDate, IsNotEmpty, IsString, Length} from "class-validator";
 
 export class MovieDto{
 

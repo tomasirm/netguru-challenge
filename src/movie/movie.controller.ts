@@ -14,39 +14,36 @@ import {
 import {ApiBearerAuth, ApiOkResponse, ApiOperation, ApiTags} from "@nestjs/swagger";
 import {MovieCreateRequestDto} from "./dto/movie-create-request.dto";
 import {MovieService} from "./movie.service";
-import {Movie} from "./movie.entity";
+import {MovieEntity} from "./movie.entity";
 import {AuthGuard} from "@nestjs/passport";
 import {JwtAuthGuard} from "../auth/jwt-auth.guard";
 import {JwtStrategy} from "../auth/jwt.strategy";
 import {UserDto} from "../auth/user.dto";
+import {MovieDto} from "./dto/movie.dto";
 
-@ApiTags('api')
+@ApiTags('Movies')
 @Controller('movies')
 export class MovieController {
-    constructor(private movieService: MovieService) {}
+    constructor(private movieService: MovieService) {
+    }
 
     @Post()
     @HttpCode(HttpStatus.CREATED)
-    @ApiOperation({ summary: 'Create movie' })
-    @ApiOkResponse({ description: 'Create movie' })
+    @ApiOperation({summary: 'Create movie'})
+    @ApiOkResponse({description: 'Create movie'})
     @ApiBearerAuth()
     @UseGuards(JwtAuthGuard)
     public async addMovie(
-        @Res() res,
         @Request() req,
         @Body() movieCreateRequestDto: MovieCreateRequestDto,
-    ) {
+    ): Promise<MovieEntity> {
         try {
-            const userDto : UserDto = req.user;
-           const movie = await this.movieService.createMovie(movieCreateRequestDto, userDto);
-            return res.status(HttpStatus.OK).json({
-                message: 'Movie has been created successfully',
-                movie,
-            });
+            const userDto: UserDto = req.user;
+            const movie = await this.movieService.createMovie(movieCreateRequestDto, userDto);
+            return movie;
         } catch (err) {
             console.log(err);
             throw new HttpException({
-                status: HttpStatus.BAD_REQUEST,
                 error: err.message,
             }, HttpStatus.BAD_REQUEST);
         }
@@ -54,21 +51,18 @@ export class MovieController {
 
     @Get()
     @HttpCode(HttpStatus.OK)
-    @ApiOperation({ summary: 'Get all movies' })
-    @ApiOkResponse({ description: 'Get all movies', type: [Movie] })
-    public async findAll() {
-        try{
+    @ApiOperation({summary: 'Get all movies'})
+    @ApiOkResponse({description: 'Get all movies', type: [MovieDto]})
+    @ApiBearerAuth()
+    @UseGuards(JwtAuthGuard)
+    public async findAll(): Promise<MovieDto[]> {
+        try {
             return await this.movieService.findAll();
-        }catch (err){
-            console.log(err);
+        } catch (err) {
             throw new HttpException({
-                status: HttpStatus.BAD_REQUEST,
                 error: err.message,
             }, HttpStatus.BAD_REQUEST);
         }
-
-
-        // return res.status(HttpStatus.OK).json(movies);
     }
 
 }

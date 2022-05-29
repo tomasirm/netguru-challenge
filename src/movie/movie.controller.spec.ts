@@ -29,7 +29,7 @@ describe("MovieController Unit Tests", () => {
     it("calling addMovie method", async () => {
         const dto = new MovieCreateRequestDto();
         const req = {user: {userId: 1, name: 'Tomas'}};
-        await movieController.addMovie(null, req, dto);
+        await movieController.addMovie( req, dto);
         expect(spyService.createMovie).toHaveBeenCalled();
     })
 
