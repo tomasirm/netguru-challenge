@@ -1,7 +1,7 @@
 import {MovieService} from "./movie.service";
 import {Test, TestingModule} from "@nestjs/testing";
 import {MovieCreateRequestDto} from "./dto/movie-create-request.dto";
-import {UserDto} from "../user/user.dto";
+import {UserDto} from "../auth/user.dto";
 
 class ApiServiceMock {
     createMovie(dto: MovieCreateRequestDto) {

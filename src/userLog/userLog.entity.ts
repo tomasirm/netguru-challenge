@@ -1,7 +1,5 @@
 import {Column, CreateDateColumn, Entity, JoinColumn, JoinTable, ManyToOne, PrimaryGeneratedColumn} from "typeorm";
-import {ApiProperty} from "@nestjs/swagger";
 import {Movie} from "../movie/movie.entity";
-import {User} from "../user/user.entity";
 
 @Entity()
 export class UserLogEntity {

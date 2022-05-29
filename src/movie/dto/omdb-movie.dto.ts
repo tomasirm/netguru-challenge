@@ -1,5 +1,5 @@
 import {ApiProperty} from "@nestjs/swagger";
-import {OmdbRatingMovieDto} from "./omdb-rating-movie.dto";
+import {OmdbRatingMovieDto} from "./omdb-rating.dto";
 
 export class OmdbMovieDto {
     @ApiProperty({ description: 'Title' })

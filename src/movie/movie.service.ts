@@ -1,20 +1,19 @@
-import {HttpException, HttpStatus, Injectable} from '@nestjs/common';
+import {HttpException, HttpService, HttpStatus, Injectable} from '@nestjs/common';
 import {MovieRepository} from "./movie.repository";
 import {MovieCreateRequestDto} from "./dto/movie-create-request.dto";
 import {Movie} from "./movie.entity";
 import {UserLogsService} from "../userLog/userLogs.service";
-import {TransactionRoleEnum} from "../enums/transactionRoleEnum";
-import {OmdbService} from "../omdb/omdb.service";
+import {TransactionRoleEnum} from "../common/enums/transactionRoleEnum";
 import {UserLogEntity} from "../userLog/userLog.entity";
-import {UserDto} from "../user/user.dto";
-import {OmdbMovieDto} from "../omdb/dto/omdb-movie.dto";
+import {UserDto} from "../auth/user.dto";
+import {OmdbMovieDto} from "./dto/omdb-movie.dto";
 import {lastValueFrom, map} from "rxjs";
 
 @Injectable()
 export class MovieService {
     constructor(private readonly movieRepository: MovieRepository,
                 private readonly userLogsService: UserLogsService,
-                private readonly omdbService: OmdbService) {}
+                private http: HttpService) {}
 
     async createMovie(movieCreateRequestDto: MovieCreateRequestDto, userDto: UserDto): Promise<Movie> {
         try{
@@ -25,26 +24,21 @@ export class MovieService {
                     HttpStatus.INTERNAL_SERVER_ERROR);
             }
 
-            /*const movieFound = {Released: "22 Mar 1985",
-                Runtime: "113 min",
-                Genre: "Drama, Sci-Fi",
-                Director: "nose"};*/
-
-            const omdbMovieData = await this.omdbService.getMovie(movieCreateRequestDto.title);
+            const omdbMovieData = await this.getMovie(movieCreateRequestDto.title);
 
             const movie = this.movieRepository.create(Movie.of(movieCreateRequestDto));
             movie.genre = omdbMovieData.Genre;
             movie.released = omdbMovieData.Released;
             movie.director = omdbMovieData.Director;
-            await this.movieRepository.save(movie);
+
+            const movieSaved = await this.movieRepository.save(movie);
 
             const userLogEntity = new UserLogEntity();
             userLogEntity.movie = movie;
             userLogEntity.userId = userDto.userId;
             await this.userLogsService.createUserLog(userLogEntity);
 
-            return movie;
-
+            return movieSaved;
         }catch (e){
             throw new HttpException(e,
                 HttpStatus.INTERNAL_SERVER_ERROR);
@@ -60,4 +54,13 @@ export class MovieService {
         }
     }
 
+    async getMovie(title): Promise<OmdbMovieDto> {
+        const omdbApiKey = process.env.OMDB_API_KEY;
+        const omdbApiurl = process.env.OMDB_API_URL;
+
+        return lastValueFrom(this.http.get(`${omdbApiurl}/?t=${title}&apikey=${omdbApiKey}`)
+            .pipe(
+                map(response => response.data))
+        );
+    }
 }

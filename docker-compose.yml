@@ -16,9 +16,12 @@ services:
       - db
     ports:
       - "3000:3000"
+    environment:
+      JWT_SECRET: ${JWT_SECRET}
+      OMDB_API_KEY: ${OMDB_API_KEY}
   auth:
     build: ./nodejs-recruitment-task/.
     environment:
-      - JWT_SECRET=${JWT_SECRET}
+      JWT_SECRET: ${JWT_SECRET}
     ports:
       - "3001:3001"

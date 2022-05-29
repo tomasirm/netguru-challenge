@@ -16,9 +16,9 @@ import {MovieCreateRequestDto} from "./dto/movie-create-request.dto";
 import {MovieService} from "./movie.service";
 import {Movie} from "./movie.entity";
 import {AuthGuard} from "@nestjs/passport";
-import {JwtAuthGuard} from "./jwt-auth.guard";
-import {JwtStrategy} from "./jwt.strategy";
-import {UserDto} from "../user/user.dto";
+import {JwtAuthGuard} from "../auth/jwt-auth.guard";
+import {JwtStrategy} from "../auth/jwt.strategy";
+import {UserDto} from "../auth/user.dto";
 
 @ApiTags('api')
 @Controller('movies')
@@ -38,11 +38,11 @@ export class MovieController {
     ) {
         try {
             const userDto : UserDto = req.user;
-            return await this.movieService.createMovie(movieCreateRequestDto, userDto);
-            /*return res.status(HttpStatus.OK).json({
+           const movie = await this.movieService.createMovie(movieCreateRequestDto, userDto);
+            return res.status(HttpStatus.OK).json({
                 message: 'Movie has been created successfully',
                 movie,
-            });*/
+            });
         } catch (err) {
             console.log(err);
             throw new HttpException({

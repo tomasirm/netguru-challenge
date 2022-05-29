@@ -1,12 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import {UserDto} from "../user/user.dto";
-import {UserRepository} from "../user/user.repository";
-import {User} from "../user/user.entity";
-import {Movie} from "../movie/movie.entity";
-import {UserLogDto} from "./userLog.dto";
 import {UserLogEntity} from "./userLog.entity";
 import {UserLogsRepository} from "./userLogs.repository";
-import {LessThan} from "typeorm";
 import * as moment from "moment";
 
 @Injectable()

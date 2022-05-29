@@ -1,4 +1,13 @@
-import {Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, Unique, UpdateDateColumn} from 'typeorm';
+import {
+    BeforeInsert,
+    Column,
+    CreateDateColumn,
+    Entity,
+    OneToMany,
+    PrimaryGeneratedColumn,
+    Unique,
+    UpdateDateColumn
+} from 'typeorm';
 import {ApiProperty} from '@nestjs/swagger';
 import {UserLogEntity} from "../userLog/userLog.entity";
 
@@ -36,6 +45,11 @@ export class Movie {
 
     @OneToMany(() => UserLogEntity, (userLog) => userLog.movie)
     userLogs: UserLogEntity[]
+
+    @BeforeInsert()
+    nameToUpperCase() {
+        this.title = this.title.toUpperCase();
+    }
 
     static of(params: Partial<Movie>): Movie {
         const movie = new Movie();
