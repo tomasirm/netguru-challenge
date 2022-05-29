@@ -28,7 +28,7 @@ Database
 - database: movies
 
 # REST API
-Remember get token `config.ru` is a minimal Rack configuration for unicorn.
+Remember get token from `auth-api` first. 
 ## Get list of Movies
 
 ### Request
