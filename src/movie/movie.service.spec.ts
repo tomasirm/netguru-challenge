@@ -28,7 +28,7 @@ describe.only("MovieService", () => {
         movieService = module.get<MovieService>(MovieService);
     })
 
-    it('should call saveNote method with expected params', async () => {
+    it('should call createMovie method with expected params', async () => {
         const createMovieSpy = jest.spyOn(movieService, 'createMovie');
         const dto = new MovieCreateRequestDto();
         const userDto = new UserDto();
