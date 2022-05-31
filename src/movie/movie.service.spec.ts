@@ -36,9 +36,9 @@ describe.only("MovieService", () => {
         expect(createMovieSpy).toHaveBeenCalledWith(dto, userDto);
     });
 
-    it('should call findOneNote method with expected param', async () => {
-        const findOneNoteSpy = jest.spyOn(movieService, 'findAll');
+    it('should call findAll method with expected param', async () => {
+        const findAllSpy = jest.spyOn(movieService, 'findAll');
         movieService.findAll();
-        expect(findOneNoteSpy).toHaveBeenCalledWith();
+        expect(findAllSpy).toHaveBeenCalledWith();
     });
 })
